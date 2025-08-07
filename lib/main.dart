@@ -1,35 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_local.dart';
+import 'package:presensi/screens/login_screen.dart';
 import 'package:presensi/screens/home_screen.dart';
+import 'package:presensi/services/storage_service.dart';
 
 void main() async {
-  await initializeDateFormatting('id_ID', null);
+  WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const PresentApp());
+  final loginData = await StorageService.getLoginData();
+  final bool isRemembered = loginData['rememberMe'] ?? false;
+
+  runApp(MyApp(isLoggedIn: isRemembered));
 }
 
-class PresentApp extends StatelessWidget {
-  const PresentApp({super.key});
+class MyApp extends StatelessWidget {
+  final bool isLoggedIn;
+
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Present',
+      title: 'Presensi',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: const Color(0xFFE34F00),
-        colorScheme: ColorScheme.fromSwatch().copyWith(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFFE34F00), // Primary
           primary: const Color(0xFFE34F00),
           secondary: const Color(0xFFFFEADF),
         ),
-        scaffoldBackgroundColor: Colors.white,
-        fontFamily: 'Roboto',
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          elevation: 0,
-        ),
       ),
-      home: const HomeScreen(),
+      home: isLoggedIn ? const HomeScreen() : const LoginScreen(),
     );
   }
 }

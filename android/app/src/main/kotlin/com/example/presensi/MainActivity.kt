@@ -1,4 +1,4 @@
-package com.example.presensi
+package com.satudua.presensi
 
 import io.flutter.embedding.android.FlutterActivity
 
